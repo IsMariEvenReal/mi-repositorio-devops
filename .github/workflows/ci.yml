@@ -1,0 +1,33 @@
+name: CI - Validación del Proyecto
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código del repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r app/requirements.txt
+
+      - name: Ejecutar app
+        run: |
+          python app/app.py &
+          sleep 10
+
+      - name: Verificar respuesta
+        run: |
+          curl http://localhost:5000
